@@ -311,7 +311,7 @@ function listCapabilityModels(input: {
     ...providerText.split(/\s+/),
     ...providerText.split(/[^\p{L}\p{N}]+/u),
   ]);
-  const modelTerms = input.searchTerms.filter((term) => !providerWords.has(term));
+  const modelTerms = input.searchTerms.filter((term) => term !== "" && !providerWords.has(term));
   if (modelTerms.length > 0) {
     const matches = visible.filter((model) => {
       const text = `${model.slug} ${model.name} ${model.subProvider ?? ""}`.toLowerCase();

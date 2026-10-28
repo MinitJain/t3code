@@ -1303,6 +1303,7 @@ describe("OrchestratorMcpService provider resolution", () => {
           instanceId: codexInstanceId,
           driver: ProviderDriverKind.make("codex"),
         }),
+        displayName: "Codex",
         models: [
           model("gpt-6", {
             name: "Sol",
@@ -1436,6 +1437,8 @@ describe("OrchestratorMcpService provider resolution", () => {
           { id: codexInstanceId, models: ["gpt-6", "gpt-4", "gpt-3", "my-alpha"], omitted: 1 },
           { id: opencodeInstanceId, models: [], omitted: 0 },
         ]);
+        // A blank search lists the same models as no search.
+        assert.deepEqual(listing(yield* capabilitiesWith(" ")), listing(yield* capabilitiesWith()));
         // A word that only appears inside the provider's name is a model word, not the provider.
         assert.deepEqual(listing(yield* capabilitiesWith("code"))[0], {
           id: codexInstanceId,
