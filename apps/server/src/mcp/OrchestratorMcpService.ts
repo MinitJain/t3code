@@ -306,7 +306,12 @@ function listCapabilityModels(input: {
     .toSorted((a, b) => (rank.get(a.slug) ?? rank.size) - (rank.get(b.slug) ?? rank.size));
   const { instanceId, driver, displayName } = input.provider;
   const providerText = `${instanceId} ${driver} ${displayName ?? ""}`.toLowerCase();
-  const modelTerms = input.searchTerms.filter((term) => !providerText.includes(term));
+  // Whole ids like "codex-work" and their parts both name the provider.
+  const providerWords = new Set([
+    ...providerText.split(/\s+/),
+    ...providerText.split(/[^\p{L}\p{N}]+/u),
+  ]);
+  const modelTerms = input.searchTerms.filter((term) => !providerWords.has(term));
   if (modelTerms.length > 0) {
     const matches = visible.filter((model) => {
       const text = `${model.slug} ${model.name} ${model.subProvider ?? ""}`.toLowerCase();
