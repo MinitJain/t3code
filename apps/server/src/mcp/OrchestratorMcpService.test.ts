@@ -1445,6 +1445,11 @@ describe("OrchestratorMcpService provider resolution", () => {
           models: ["gpt-5"],
           omitted: 0,
         });
+        // Part of the provider's name that no model matches still names the provider.
+        assert.deepEqual(
+          listing(yield* capabilitiesWith("open"))[1],
+          listing(yield* capabilitiesWith())[1],
+        );
         assert.deepEqual(listing(yield* capabilitiesWith("codex gpt 5"))[0], {
           id: codexInstanceId,
           models: ["gpt-5"],
