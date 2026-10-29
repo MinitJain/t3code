@@ -288,9 +288,10 @@ const LISTED_MODEL_LIMIT = 8;
 
 /**
  * Picks the models orchestrator_capabilities shows for one provider. Hidden models never
- * appear. Search words naming the provider are dropped; other words list matches. With no
- * words left, lists pinned models (custom, favorite, the caller's own) plus non-legacy
- * models, or only the first few in the user's model order for large catalogs.
+ * appear. A search word that is a word of the provider's name, or part of it that no model
+ * matches, selects the provider; other words list matches. With no words left, lists pinned
+ * models (custom, favorite, the caller's own) plus non-legacy models, or only the first few
+ * in the user's model order for large catalogs.
  */
 function listCapabilityModels(input: {
   readonly provider: ServerProvider;
