@@ -287,11 +287,8 @@ const FULL_CATALOG_DRIVERS: ReadonlySet<string> = new Set(["codex", "claudeAgent
 const LISTED_MODEL_LIMIT = 8;
 
 /**
- * Picks the models orchestrator_capabilities shows for one provider. Hidden models never
- * appear. A search word that is a word of the provider's name, or part of it that no model
- * matches, selects the provider; other words list matches. With no words left, lists pinned
- * models (custom, favorite, the caller's own) plus non-legacy models, or only the first few
- * in the user's model order for large catalogs.
+ * Lists visible models, keeping pinned models and limiting large catalogs by default.
+ * Whole provider words select the provider; partial words filter models when any match.
  */
 function listCapabilityModels(input: {
   readonly provider: ServerProvider;
@@ -321,9 +318,10 @@ function listCapabilityModels(input: {
       (!providerText.includes(term) || visible.some((model) => modelText(model).includes(term))),
   );
   if (modelTerms.length > 0) {
-    const matches = visible.filter((model) =>
-      modelTerms.every((term) => modelText(model).includes(term)),
-    );
+    const matches = visible.filter((model) => {
+      const text = modelText(model);
+      return modelTerms.every((term) => text.includes(term));
+    });
     const listed = matches.slice(0, LISTED_MODEL_LIMIT);
     return { listed, omitted: matches.length - listed.length };
   }

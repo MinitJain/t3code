@@ -1437,15 +1437,14 @@ describe("OrchestratorMcpService provider resolution", () => {
           { id: codexInstanceId, models: ["gpt-6", "gpt-4", "gpt-3", "my-alpha"], omitted: 1 },
           { id: opencodeInstanceId, models: [], omitted: 0 },
         ]);
-        // A blank search lists the same models as no search.
         assert.deepEqual(listing(yield* capabilitiesWith(" ")), listing(yield* capabilitiesWith()));
-        // A word that only appears inside the provider's name is a model word, not the provider.
-        assert.deepEqual(listing(yield* capabilitiesWith("code"))[0], {
-          id: codexInstanceId,
-          models: ["gpt-5"],
-          omitted: 0,
-        });
-        // Part of the provider's name that no model matches still names the provider.
+        for (const search of ["code", "codex code", "  CODE  "]) {
+          assert.deepEqual(listing(yield* capabilitiesWith(search))[0], {
+            id: codexInstanceId,
+            models: ["gpt-5"],
+            omitted: 0,
+          });
+        }
         assert.deepEqual(
           listing(yield* capabilitiesWith("open"))[1],
           listing(yield* capabilitiesWith())[1],
